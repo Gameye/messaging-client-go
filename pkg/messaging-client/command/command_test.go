@@ -38,16 +38,47 @@ func TestSendJSONObject(test *testing.T) {
 	}
 
 	server := testutils.StartServer(testutils.GetNextPort(), commandHandler)
-	test.Log("Server up")
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/command/test", testutils.Port)
-
 	err := Invoke(url, payload, map[string]string{"X-HEADER-KEY": "HEADER_VALUE"})
-	test.Logf("Result %s", err)
+	assert.Nil(test, err)
+	server.Shutdown(nil)
+}
 
-	if err != nil {
-		test.Errorf("Failed to invoke command\n%s", err)
+func TestErrorsWhenAServerErrorOccurs(test *testing.T) {
+
+	commandHandler := func(writer http.ResponseWriter, request *http.Request) {
+		writer.WriteHeader(http.StatusInternalServerError)
 	}
 
+	server := testutils.StartServer(testutils.GetNextPort(), commandHandler)
+
+	url := fmt.Sprintf("http://127.0.0.1:%d/command/failure", testutils.Port)
+	err := Invoke(url, nil, nil)
+	assert.NotNil(test, err)
+	server.Shutdown(nil)
+}
+
+func TestErrorsWhenAJsonSerializationErrorOccurs(test *testing.T) {
+
+	type TestPayload struct {
+		KeyOne func(string)
+		KeyTwo string `json:"keyTwo"`
+	}
+
+	payload := TestPayload{
+		KeyOne: func(notValid string) {},
+		KeyTwo: "two",
+	}
+
+	commandHandler := func(writer http.ResponseWriter, request *http.Request) {
+		writer.WriteHeader(http.StatusInternalServerError)
+	}
+
+	server := testutils.StartServer(testutils.GetNextPort(), commandHandler)
+
+	url := fmt.Sprintf("http://127.0.0.1:%d/command/failure", testutils.Port)
+	err := Invoke(url, payload, nil)
+	assert.NotNil(test, err)
 	server.Shutdown(nil)
 }

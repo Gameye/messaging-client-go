@@ -40,7 +40,7 @@ func Invoke(url string, payload interface{}, headers map[string]string) (err err
 	}
 
 	if response.StatusCode < 200 || response.StatusCode >= 400 {
-		return errors.Wrap(err, "Error: Http request returned not ok status")
+		return errors.New("Error: Http request returned not ok status")
 	}
 
 	return nil
