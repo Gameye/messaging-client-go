@@ -2,7 +2,6 @@ package command
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -15,23 +14,20 @@ const (
 	httpTimeout = 30 * time.Second
 )
 
-func Invoke(url string, payload interface{}, headers map[string]string, context context.Context) (err error) {
-	var reqBody io.Reader
+// Invoke a command on a given url
+func Invoke(url string, payload interface{}, headers map[string]string) (err error) {
+	var requestBody io.Reader
 	if payload != nil {
 		jsonData, err := json.Marshal(payload)
 		if err != nil {
 			return errors.Wrap(err, "Error: Could not encode json payload")
 		}
-		reqBody = bytes.NewBuffer(jsonData)
+		requestBody = bytes.NewBuffer(jsonData)
 	}
 
-	request, err := http.NewRequest(http.MethodPost, url, reqBody)
+	request, err := http.NewRequest(http.MethodPost, url, requestBody)
 	if err != nil {
 		return errors.Wrap(err, "Error: Could not create http request")
-	}
-
-	if context != nil {
-		request = request.WithContext(context)
 	}
 
 	request.Header.Set("Content-Type", "application/json")
@@ -40,7 +36,7 @@ func Invoke(url string, payload interface{}, headers map[string]string, context 
 		request.Header.Add(key, value)
 	}
 
-	response, err := getHttpClient().Do(request)
+	response, err := getHTTPClient().Do(request)
 	if err != nil {
 		return errors.Wrap(err, "Error: Could not execute http request")
 	}
@@ -52,7 +48,7 @@ func Invoke(url string, payload interface{}, headers map[string]string, context 
 	return nil
 }
 
-func getHttpClient() *http.Client {
+func getHTTPClient() *http.Client {
 	return &http.Client{
 		Timeout:   httpTimeout,
 		Transport: http.DefaultTransport,

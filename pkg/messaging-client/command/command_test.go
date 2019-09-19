@@ -1,7 +1,6 @@
 package command
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -41,10 +40,9 @@ func TestSendJSONObject(test *testing.T) {
 	server := testutils.StartServer(testutils.GetNextPort(), commandHandler)
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/command/test", testutils.Port)
-	context := context.Background()
-	err := Invoke(url, payload, map[string]string{"X-HEADER-KEY": "HEADER_VALUE"}, context)
+	err := Invoke(url, payload, map[string]string{"X-HEADER-KEY": "HEADER_VALUE"})
 	assert.Nil(test, err)
-	server.Shutdown(context)
+	server.Close()
 }
 
 func TestErrorsWhenAServerErrorOccurs(test *testing.T) {
@@ -56,13 +54,12 @@ func TestErrorsWhenAServerErrorOccurs(test *testing.T) {
 	server := testutils.StartServer(testutils.GetNextPort(), commandHandler)
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/command/test", testutils.Port)
-	context := context.Background()
-	err := Invoke(url, nil, nil, context)
+	err := Invoke(url, nil, nil)
 	assert.NotNil(test, err)
-	server.Shutdown(context)
+	server.Close()
 }
 
-func TestErrorsWhenAJsonSerializationErrorOccurs(test *testing.T) {
+func TestErrorsWhenAJSONSerializationErrorOccurs(test *testing.T) {
 	type TestPayload struct {
 		KeyOne func(string)
 		KeyTwo string `json:"keyTwo"`
@@ -80,8 +77,7 @@ func TestErrorsWhenAJsonSerializationErrorOccurs(test *testing.T) {
 	server := testutils.StartServer(testutils.GetNextPort(), commandHandler)
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/command/test", testutils.Port)
-	context := context.Background()
-	err := Invoke(url, payload, nil, context)
+	err := Invoke(url, payload, nil)
 	assert.NotNil(test, err)
-	server.Shutdown(context)
+	server.Close()
 }
