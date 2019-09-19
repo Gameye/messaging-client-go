@@ -2,6 +2,7 @@ package command
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -14,7 +15,7 @@ const (
 	httpTimeout = 30 * time.Second
 )
 
-func Invoke(url string, payload interface{}, headers map[string]string) (err error) {
+func Invoke(url string, payload interface{}, headers map[string]string, context context.Context) (err error) {
 	var reqBody io.Reader
 	if payload != nil {
 		jsonData, err := json.Marshal(payload)
@@ -28,6 +29,11 @@ func Invoke(url string, payload interface{}, headers map[string]string) (err err
 	if err != nil {
 		return errors.Wrap(err, "Error: Could not create http request")
 	}
+
+	if context != nil {
+		request = request.WithContext(context)
+	}
+
 	request.Header.Set("Content-Type", "application/json")
 
 	for key, value := range headers {

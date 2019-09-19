@@ -14,14 +14,17 @@ func GetNextPort() int32 {
 
 func StartServer(port int32, handler func(writer http.ResponseWriter, request *http.Request)) *http.Server {
 	portString := fmt.Sprintf(":%d", port)
-	server := &http.Server{Addr: portString}
-	http.HandleFunc("/", handler)
+
+	serveMux := http.NewServeMux()
+	serveMux.HandleFunc("/", handler)
+
+	server := &http.Server{
+		Addr:    portString,
+		Handler: serveMux,
+	}
+
 	go func() {
-		err := http.ListenAndServe(portString, nil)
-		fmt.Printf("Http server running, listening on port %d", port)
-		if err != nil {
-			panic(err)
-		}
+		server.ListenAndServe()
 	}()
 	return server
 }
