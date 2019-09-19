@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"testing"
 
-	testutils "../../../testutils"
 	"github.com/stretchr/testify/assert"
+
+	command "../../pkg/command"
+	testutils "../testutils"
 )
 
 func TestSendJSONObject(test *testing.T) {
@@ -40,7 +42,7 @@ func TestSendJSONObject(test *testing.T) {
 	server := testutils.StartServer(testutils.GetNextPort(), commandHandler)
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/command/test", testutils.Port)
-	err := Invoke(url, payload, map[string]string{"X-HEADER-KEY": "HEADER_VALUE"})
+	err := command.Invoke(url, payload, map[string]string{"X-HEADER-KEY": "HEADER_VALUE"})
 	assert.Nil(test, err)
 	server.Close()
 }
@@ -54,7 +56,7 @@ func TestErrorsWhenAServerErrorOccurs(test *testing.T) {
 	server := testutils.StartServer(testutils.GetNextPort(), commandHandler)
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/command/test", testutils.Port)
-	err := Invoke(url, nil, nil)
+	err := command.Invoke(url, nil, nil)
 	assert.NotNil(test, err)
 	server.Close()
 }
@@ -77,7 +79,7 @@ func TestErrorsWhenAJSONSerializationErrorOccurs(test *testing.T) {
 	server := testutils.StartServer(testutils.GetNextPort(), commandHandler)
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/command/test", testutils.Port)
-	err := Invoke(url, payload, nil)
+	err := command.Invoke(url, payload, nil)
 	assert.NotNil(test, err)
 	server.Close()
 }

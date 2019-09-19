@@ -9,8 +9,10 @@ import (
 	"testing"
 	"time"
 
-	testutils "../../../testutils"
 	"github.com/stretchr/testify/assert"
+
+	eventstream "../../pkg/eventstream"
+	testutils "../testutils"
 )
 
 func TestStreamsJSONObjectsFromServer(test *testing.T) {
@@ -54,7 +56,7 @@ func TestStreamsJSONObjectsFromServer(test *testing.T) {
 		"paramOne": "valueOne",
 	}
 	context := context.Background()
-	decoder, err := Create(context, url, queryParams, map[string]string{"X-HEADER-KEY": "HEADER_VALUE"})
+	decoder, err := eventstream.Create(context, url, queryParams, map[string]string{"X-HEADER-KEY": "HEADER_VALUE"})
 
 	for {
 		var payload TestPayload
@@ -77,4 +79,9 @@ func TestStreamsJSONObjectsFromServer(test *testing.T) {
 
 	assert.Nil(test, err)
 	server.Close()
+}
+
+func TestErrorsWithInvalidInput(test *testing.T) {
+	_, err := eventstream.Create(nil, "", nil, nil)
+	assert.NotNil(test, err)
 }
