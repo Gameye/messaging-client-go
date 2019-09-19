@@ -66,7 +66,6 @@ func TestStreamsJSONObjectsFromServer(test *testing.T) {
 			break
 		} else if err != nil {
 			test.Error(err)
-			assert.NotNil(test, err)
 			break
 		} else {
 			assert.NotNil(test, payload)
