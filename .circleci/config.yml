@@ -1,0 +1,38 @@
+version: 2.1
+executors:
+  go:
+    docker:
+      - image: circleci/golang:1.11
+jobs:
+  lint-go:
+    docker: &docker_go
+      - image: circleci/golang:1.11
+    steps:
+      - checkout
+      - run: go get golang.org/x/lint/golint
+      - run: golint -set_exit_status ./...
+
+  test-go:
+    docker: *docker_go
+    steps:
+      - checkout
+      - run: go test -v ./...
+
+  vet-go:
+    docker: *docker_go
+    steps:
+      - checkout
+      - run: go vet ./...
+
+workflows:
+  version: 2
+  go:
+    jobs:
+      - lint-go: &go_job
+          filters:
+            branches:
+              only: /.*?/
+            tags:
+              only: /.*?/
+      - test-go: *go_job
+      - vet-go: *go_job
