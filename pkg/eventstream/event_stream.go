@@ -3,6 +3,7 @@ package eventstream
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -47,7 +48,12 @@ func Create(context context.Context,
 	}
 
 	if response.StatusCode < 200 || response.StatusCode >= 400 {
-		return nil, errors.New("Error: Http request returned not ok status")
+		msg := fmt.Sprintf(
+			"Error: Http request returned not ok status: %v - %v",
+			response.StatusCode,
+			response.Status,
+		)
+		return errors.New(msg)
 	}
 
 	// Start a goroutine to close the body when the context is done
