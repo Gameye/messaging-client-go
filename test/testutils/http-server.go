@@ -27,7 +27,7 @@ func StartServer(port int32, handler func(writer http.ResponseWriter, request *h
 	}
 
 	go func() {
-		server.ListenAndServe()
+		log.Fatal(server.ListenAndServe())
 	}()
 	return server
 }
