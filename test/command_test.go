@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	command "../pkg/command"
-	testutils "./testutils"
+	"../pkg/command"
+	"./testutils"
 )
 
 func TestSendJSONObject(test *testing.T) {
