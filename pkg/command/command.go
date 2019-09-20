@@ -3,6 +3,7 @@ package command
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -42,7 +43,12 @@ func Invoke(url string, payload interface{}, headers map[string]string) (err err
 	}
 
 	if response.StatusCode < 200 || response.StatusCode >= 400 {
-		return errors.New("Error: Http request returned not ok status")
+		msg := fmt.Sprintf(
+			"Error: Http request returned not ok status: %v - %v",
+			response.StatusCode,
+			response.Status,
+		)
+		return errors.New(msg)
 	}
 
 	return nil
