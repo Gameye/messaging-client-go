@@ -15,7 +15,7 @@ const (
 	httpTimeout = 30 * time.Second
 )
 
-// Open a stream to a given url
+// Create a stream to a given url and return a json.Decoder to that stream
 func Create(context context.Context,
 	url string,
 	queryStringParams map[string]string,
