@@ -6,7 +6,6 @@ A class library for sending commands and reading event streams.
 
 NEVER commit something that breaks the build! You can
 easily prevent this by linking the `test.sh` script as a `pre-commit` hook!
-
 like this:
 
 ```bash
