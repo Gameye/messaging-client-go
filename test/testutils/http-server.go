@@ -2,6 +2,7 @@ package testutils
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 )
 
