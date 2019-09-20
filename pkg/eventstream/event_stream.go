@@ -53,7 +53,7 @@ func Create(context context.Context,
 			response.StatusCode,
 			response.Status,
 		)
-		return errors.New(msg)
+		return nil, errors.New(msg)
 	}
 
 	// Start a goroutine to close the body when the context is done
