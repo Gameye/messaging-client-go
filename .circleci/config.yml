@@ -1,8 +1,5 @@
-version: 2.1
-executors:
-  go:
-    docker:
-      - image: circleci/golang:1.11
+version: 2
+
 jobs:
   lint-go:
     docker: &docker_go
