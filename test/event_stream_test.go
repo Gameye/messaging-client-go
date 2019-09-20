@@ -1,4 +1,4 @@
-package eventstream
+package tests
 
 import (
 	"context"
@@ -11,8 +11,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	eventstream "../../pkg/eventstream"
-	testutils "../testutils"
+	eventstream "../pkg/eventstream"
+	testutils "./testutils"
 )
 
 func TestStreamsJSONObjectsFromServer(test *testing.T) {

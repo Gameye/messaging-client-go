@@ -1,4 +1,4 @@
-package command
+package tests
 
 import (
 	"encoding/json"
@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	command "../../pkg/command"
-	testutils "../testutils"
+	command "../pkg/command"
+	testutils "./testutils"
 )
 
 func TestSendJSONObject(test *testing.T) {
