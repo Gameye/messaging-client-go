@@ -37,6 +37,7 @@ func Create(context context.Context,
 	for key := range queryStringParams {
 		urlQuery.Set(key, queryStringParams[key])
 	}
+	request.URL.RawQuery = urlQuery.Encode()
 
 	for key, value := range headers {
 		request.Header.Add(key, value)
