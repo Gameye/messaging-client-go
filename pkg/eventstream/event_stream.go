@@ -4,16 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"io"
 	"log"
 	"net/http"
-	"time"
-
-	"github.com/pkg/errors"
-)
-
-const (
-	httpTimeout = 30 * time.Second
 )
 
 // Create a stream to a given url and return a json.Decoder to that stream
@@ -73,7 +67,7 @@ func Create(context context.Context,
 
 func getHTTPClient() *http.Client {
 	return &http.Client{
-		Timeout:   httpTimeout,
+		Timeout:   0,
 		Transport: http.DefaultTransport,
 	}
 }
