@@ -27,11 +27,13 @@ func StartServer(port int32, handler func(writer http.ResponseWriter, request *h
 		Handler: serveMux,
 	}
 
+	serverChan := make(chan *http.Server)
 	go func() {
+		serverChan <- server
 		err := server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			log.Fatal(err)
 		}
 	}()
-	return server
+	return <-serverChan
 }
