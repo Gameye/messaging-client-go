@@ -1,0 +1,9 @@
+{
+    "go.useLanguageServer": true,
+    "editor.rulers": [
+        80,
+        120
+    ],
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+}
